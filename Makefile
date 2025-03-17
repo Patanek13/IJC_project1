@@ -13,19 +13,40 @@ DBFLAGS = -g
 # Source code files
 SRC = primes.c bitset.c eratosthenes.c
 HEADERS = bitset.h eratosthenes.h
-OBJECTS = $(SRC: .c = .o)
+OBJECTS = $(SRC:.c=.o)
 
 CFLAGS += -fsanitize=address
 LDFLAGS += -fsanitize=address
-LC_ALL = cs_CZ.utf8
 
 .PHONY: all run clean zip
 
+all: primes primes-i steg-decode
 
-# A)
+clean:
+	rm -f *.o *.elf primes primes-i steg-decode
+
+run: primes primes-i 
+	ulimit -s 33333 && ./primes && ./primes-i
+
+zip:
+	zip xlostap00.zip *.c *.h Makefile
+
+# Linikng
 primes: $(OBJECTS)
 	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS) 
 
-primes-i: $(OBJECTS)
+primes-i: primes-i.o bitset.o eratosthenes.o
 	$(CC) $(CFLAGS) $(DBFLAGS) -DUSE_INLINE -o $@ $^ $(LDFLAGS)
+
+# Compile
+primes.o: primes.c $(HEADERS)
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o primes.c
+
+primes-i.o: primes.c $(HEADERS)
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o -DUSE_INLINE primes.c
+
+eratosthenes.o: eratosthenes.c $(HEADERS)
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o eratosthenes.c
+
+
 
