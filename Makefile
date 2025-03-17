@@ -11,7 +11,7 @@ LDFLAGS = -lm -m32
 # Debugger flags
 DBFLAGS = -g
 # Source code files
-SRC = primes.c bitset.c eratosthenes.c
+SRC = primes.c eratosthenes.c
 HEADERS = bitset.h eratosthenes.h
 OBJECTS = $(SRC:.c=.o)
 
