@@ -5,9 +5,9 @@
 # Compiler
 CC = gcc
 # Flags/parametres for compiler
-CFLAGS = -std=c11 -pedantic -Wall -Wextra
+CFLAGS = -std=c11 -pedantic -Wall -Wextra 
 # Library flags
-LDFLAGS = -lm -m32
+LDFLAGS = -lm 
 # Debugger flags
 DBFLAGS = -g
 # Source code files
@@ -40,13 +40,13 @@ primes-i: primes-i.o bitset.o eratosthenes.o
 
 # Compile
 primes.o: primes.c $(HEADERS)
-	$(CC) $(CFLAGS) $(DBFLAGS) -c -o primes.c
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ primes.c
 
 primes-i.o: primes.c $(HEADERS)
-	$(CC) $(CFLAGS) $(DBFLAGS) -c -o -DUSE_INLINE primes.c
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ -DUSE_INLINE primes.c
 
 eratosthenes.o: eratosthenes.c $(HEADERS)
-	$(CC) $(CFLAGS) $(DBFLAGS) -c -o eratosthenes.c
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ eratosthenes.c
 
 
 
