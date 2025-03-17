@@ -11,12 +11,11 @@ LDFLAGS = -lm
 # Debugger flags
 DBFLAGS = -g
 # Source code files
-SRC = primes.c eratosthenes.c
+SRC = primes.c eratosthenes.c error.c
 HEADERS = bitset.h eratosthenes.h
 OBJECTS = $(SRC:.c=.o)
 
 CFLAGS += -fsanitize=address
-LDFLAGS += -fsanitize=address
 
 .PHONY: all run clean zip
 
@@ -35,7 +34,7 @@ zip:
 primes: $(OBJECTS)
 	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS) 
 
-primes-i: primes-i.o bitset.o eratosthenes.o
+primes-i: primes-i.o eratosthenes.o error.o
 	$(CC) $(CFLAGS) $(DBFLAGS) -DUSE_INLINE -o $@ $^ $(LDFLAGS)
 
 # Compile
@@ -47,6 +46,9 @@ primes-i.o: primes.c $(HEADERS)
 
 eratosthenes.o: eratosthenes.c $(HEADERS)
 	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ eratosthenes.c
+
+error.o: error.h error.c
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ error.c
 
 
 
