@@ -42,9 +42,9 @@ typedef unsigned long bitset_index_t;
 #define bitset_size(arr_name) arr_name[0]
 
 #define bitset_fill(arr_name, bool_expr) \
-    for (bitset_index_t index = 1; index <= bit_size(arr_name); index++ ) { \
+    for (bitset_index_t index = 1; index < bitset_size(arr_name); index++) { \
         if (bool_expr) { \
-            arr_name[index] = ULLONG_MAX; \
+            arr_name[index] = ULONG_MAX; \
         } else { \
             arr_name[index] = 0UL; \
         } \
@@ -82,7 +82,7 @@ static inline bitset_index_t bitset_size(bitset_t arr_name) {
 }
 
 static inline void bitset_fill(bitset_t arr_name, int bool_expr) {
-    for (bitset_index_t index = 1; index < (arr_name[0] / (sizeof(bitset_index_t) * CHAR_BIT) + 1); index++ ) {
+    for (bitset_index_t index = 1; index < bitset_size(arr_name); index++) {
         if (bool_expr) {
             arr_name[index] = ULONG_MAX;
         } else {
