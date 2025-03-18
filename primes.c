@@ -1,0 +1,34 @@
+// primes.c
+// Řešení IJC-DU1, příklad b), 25.3.2025
+// Autor: Patrik Lošťák, FIT
+// Přeloženo: gcc 13.3
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include "eratosthenes.h"
+#include "bitset.h"
+
+#define MAX 100
+#define PRINT 10
+
+void print_primes(bitset_t array) {
+    unsigned long count = 0;
+    for (bitset_index_t i = 0; i < bitset_size(array); i++) {
+        if (bitset_getbit(array, i) == 0) {
+            printf("%lu\n", i);
+            count++;
+        }
+        if (count == PRINT) {
+            break;
+        }
+    }
+}
+
+int main() {
+    clock_t start = clock();
+    bitset_alloc(array, MAX);
+    Eratosthenes(array);
+    print_primes(array);
+    fprintf(stderr, "Time=%.3g\n", (double)(clock()-start)/CLOCKS_PER_SEC);
+}

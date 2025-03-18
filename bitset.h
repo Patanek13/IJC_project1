@@ -12,7 +12,7 @@
 #include "error.h"
 
 // Typ bitového pole (pro předávání parametru do funkce odkazem).
-typedef unsigned long bitset_t[];
+typedef unsigned long *bitset_t;
 
 // Typ indexu bitového pole.
 typedef unsigned long bitset_index_t;
@@ -25,17 +25,16 @@ typedef unsigned long bitset_index_t;
 //num of ULs to store all bits and one element for bitset_size
 #define bitset_create(arr_name, size) \
     static_assert(size > 0 && size < ULONG_MAX, "bitset_create: Spatna velikost pole!\n"); \
-    bitset_index_t arr_name[bit_size(size) + 1] = {0}; \
-    arr_name[0] = size;
+    bitset_index_t arr_name[bit_size(size) + 1] = {size}; \
 
 
 #define bitset_alloc(arr_name, size) \
     assert(size > 0 && size < ULONG_MAX); \
-    bitset_t *arr_name = calloc(bit_size(size) + 1, sizeof(bitset_index_t)); \
+    bitset_t arr_name = calloc(bit_size(size) + 1, sizeof(bitset_index_t)); \
     if (arr_name == NULL) { \
         error_exit("%s: bitset_alloc: Chyba alokace paměti\n"); \
     } \
-    arr_name[0] = size;
+    arr_name[0] = size; 
 
 #define bitset_free(arr_name) free(arr_name)
 
@@ -51,18 +50,21 @@ typedef unsigned long bitset_index_t;
     }
 
 #define bitset_setbit(arr_name, index, bool_expr) \
-    bitset_index_t bit_arr_idx = index / (sizeof(bitset_index_t) * CHAR_BIT) + 1; \
-    bitset_index_t bit_index = index % (sizeof(bitset_index_t) * CHAR_BIT); \
-    if (index >= arr_name[0]) { \
-        error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu\n", index, arr_name[0]); \
-    } else { \
+    do { \
+        bitset_index_t bit_arr_idx = index / (sizeof(bitset_index_t) * CHAR_BIT) + 1; \
+        bitset_index_t bit_index = index % (sizeof(bitset_index_t) * CHAR_BIT); \
+        if (index >= arr_name[0]) { \
+        error_exit("bitset_setbit: Index %lu out of range 0..%lu\n", index, arr_name[0]); \
+        } else { \
         bitset_index_t value = 1UL << bit_index; \
-        if (bool_expr) { \
-            arr_name[bit_arr_idx] |= value; \
+            if (bool_expr) { \
+                arr_name[bit_arr_idx] |= value; \
         } else { \
             arr_name[bit_arr_idx] &= ~value; \
         } \
-    }
+    } \
+} while (0)
+    
 
 #define bitset_getbit(arr_name, index) \
     ( \
@@ -114,5 +116,3 @@ static inline bitset_index_t bitset_getbit(bitset_t arr_name, bitset_index_t ind
 
 #endif // USE_INLINE
 #endif // BITSET_H
-
-
