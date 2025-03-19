@@ -5,7 +5,7 @@
 # Compiler
 CC = gcc
 # Flags/parametres for compiler
-CFLAGS = -std=c11 -pedantic -Wall -Wextra 
+CFLAGS = -std=c11 -pedantic -Wall -Wextra -O2
 # Library flags
 LDFLAGS = -lm 
 # Debugger flags
@@ -37,6 +37,9 @@ primes: $(OBJECTS)
 primes-i: primes-i.o eratosthenes.o error.o
 	$(CC) $(CFLAGS) $(DBFLAGS) -DUSE_INLINE -o $@ $^ $(LDFLAGS)
 
+steg-decode: steg-decode.o ppm.o error.o eratosthenes.o utf8_check.o
+	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS)
+
 # Compile
 primes.o: primes.c $(HEADERS)
 	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ primes.c
@@ -49,6 +52,16 @@ eratosthenes.o: eratosthenes.c $(HEADERS)
 
 error.o: error.h error.c
 	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ error.c
+
+steg-decode.o: steg-decode.c ppm.h error.h eratosthenes.h utf8_check.h bitset.h 
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ steg-decode.c
+
+ppm.o: ppm.c ppm.h error.h
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ ppm.c
+
+utf8_check.o: utf8_check.c
+	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ utf8_check.c
+
 
 
 
