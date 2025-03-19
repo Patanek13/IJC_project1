@@ -1,8 +1,3 @@
-// bitset.h
-// Řešení IJC-DU1, příklad a), 25.3.2025
-// Autor: Patrik Lošťák, FIT
-// Přeloženo: gcc 13.3
-
 #ifndef BITSET_H
 #define BITSET_H
 #include <stdlib.h>
@@ -17,31 +12,32 @@ typedef unsigned long *bitset_t;
 // Typ indexu bitového pole.
 typedef unsigned long bitset_index_t;
 
-#ifndef USE_INLINE
-
 // Num of ULs to store all bits
-#define bit_size(size) ((size + (sizeof(bitset_index_t) * CHAR_BIT - 1)) / (sizeof(bitset_index_t) * CHAR_BIT))
+#define arr_size(size) ((size + (sizeof(bitset_index_t) * CHAR_BIT - 1)) / (sizeof(bitset_index_t) * CHAR_BIT) + 1)
 
 //num of ULs to store all bits and one element for bitset_size
 #define bitset_create(arr_name, size) \
     static_assert(size > 0 && size < ULONG_MAX, "bitset_create: Spatna velikost pole!\n"); \
-    bitset_index_t arr_name[bit_size(size) + 1] = {size}; \
-
+    bitset_index_t arr_name[arr_size(size)] = {0}; \
+    arr_name[0] = size; 
 
 #define bitset_alloc(arr_name, size) \
     assert(size > 0 && size < ULONG_MAX); \
-    bitset_t arr_name = calloc(bit_size(size) + 1, sizeof(bitset_index_t)); \
+    bitset_t arr_name = calloc(arr_size(size), sizeof(bitset_index_t)); \
     if (arr_name == NULL) { \
         error_exit("%s: bitset_alloc: Chyba alokace paměti\n"); \
     } \
     arr_name[0] = size; 
+
+
+#ifndef USE_INLINE
 
 #define bitset_free(arr_name) free(arr_name)
 
 #define bitset_size(arr_name) arr_name[0]
 
 #define bitset_fill(arr_name, bool_expr) \
-    for (bitset_index_t index = 1; index < bitset_size(arr_name); index++) { \
+    for (bitset_index_t index = 1; index < arr_size(arr_name[0]); index++) { \
         if (bool_expr) { \
             arr_name[index] = ULONG_MAX; \
         } else { \
@@ -54,17 +50,16 @@ typedef unsigned long bitset_index_t;
         bitset_index_t bit_arr_idx = index / (sizeof(bitset_index_t) * CHAR_BIT) + 1; \
         bitset_index_t bit_index = index % (sizeof(bitset_index_t) * CHAR_BIT); \
         if (index >= arr_name[0]) { \
-        error_exit("bitset_setbit: Index %lu out of range 0..%lu\n", index, arr_name[0]); \
+            error_exit("bitset_setbit: Index %lu mimo rozsah 0..%lu\n", index, arr_name[0]); \
         } else { \
-        bitset_index_t value = 1UL << bit_index; \
+            bitset_index_t value = 1UL << bit_index; \
             if (bool_expr) { \
                 arr_name[bit_arr_idx] |= value; \
-        } else { \
-            arr_name[bit_arr_idx] &= ~value; \
+            } else { \
+                arr_name[bit_arr_idx] &= ~value; \
+            } \
         } \
-    } \
-} while (0)
-    
+    } while (0)
 
 #define bitset_getbit(arr_name, index) \
     ( \
@@ -84,7 +79,7 @@ static inline bitset_index_t bitset_size(bitset_t arr_name) {
 }
 
 static inline void bitset_fill(bitset_t arr_name, int bool_expr) {
-    for (bitset_index_t index = 1; index < bitset_size(arr_name); index++) {
+    for (bitset_index_t index = 1; index < arr_size(arr_name[0]); index++) {
         if (bool_expr) {
             arr_name[index] = ULONG_MAX;
         } else {

@@ -13,8 +13,8 @@ void Eratosthenes(bitset_t array){
     bitset_setbit(array, 0, 0);
     bitset_setbit(array, 1, 0);
 
-    for (bitset_index_t i = 2; i < sqrt(bitset_size(array)); i++) {
-        if (bitset_getbit(array, i) == 1 ) {
+    for (bitset_index_t i = 2; i <= sqrt(bitset_size(array)); i++) {
+        if (bitset_getbit(array, i)) {
             for (bitset_index_t j = i * i; j < bitset_size(array); j += i) {
                 bitset_setbit(array, j, 0);
             }

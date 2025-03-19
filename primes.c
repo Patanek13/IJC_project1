@@ -9,19 +9,24 @@
 #include "eratosthenes.h"
 #include "bitset.h"
 
-#define MAX 100
+#define MAX 333000000
 #define PRINT 10
 
 void print_primes(bitset_t array) {
     unsigned long count = 0;
-    for (bitset_index_t i = 0; i < bitset_size(array); i++) {
-        if (bitset_getbit(array, i) == 0) {
-            printf("%lu\n", i);
+    unsigned long primes[PRINT];
+    for (bitset_index_t i = bitset_size(array) - 1; i > 0; i--) {
+        if (bitset_getbit(array, i) == 1) {
+            primes[count] = i;
             count++;
         }
         if (count == PRINT) {
             break;
         }
+    }
+
+    for (int i = PRINT - 1; i >= 0; i--) {
+        printf("%lu\n", primes[i]);
     }
 }
 
@@ -30,5 +35,6 @@ int main() {
     bitset_alloc(array, MAX);
     Eratosthenes(array);
     print_primes(array);
+    bitset_free(array);
     fprintf(stderr, "Time=%.3g\n", (double)(clock()-start)/CLOCKS_PER_SEC);
 }

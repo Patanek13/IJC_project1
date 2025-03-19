@@ -25,7 +25,7 @@ clean:
 	rm -f *.o *.elf primes primes-i steg-decode xlostap00.zip
 
 run: primes primes-i 
-	ulimit -s 33333 && ./primes && ./primes-i
+	ulimit -v unlimited && ./primes && ./primes-i
 
 zip:
 	zip xlostap00.zip *.c *.h Makefile
