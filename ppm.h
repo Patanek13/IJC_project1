@@ -6,17 +6,17 @@
 #ifndef PPM_H
 #define PPM_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 struct ppm {
-    unsigned xsize;
-    unsigned ysize;
+    unsigned xsize; // Šířka obrázku zapsaná v ASCII v desítkové soustavě.
+    unsigned ysize; // Obdobně výška obrázku.
     char data[]; // RGB bajty, celkem 3*xsize*ysize
 };
 
+// Načte obsah PPM souboru do touto funkcí dynamicky alokované struktury. 
+// Při chybě formátu použije funkci warning a vrátí NULL.
 struct ppm * ppm_read(const char * filename);
 
+// Uvolní paměť dynamicky alokovanou v ppm_read.
 void ppm_free(struct ppm *p);
 
 #endif // PPM_H
