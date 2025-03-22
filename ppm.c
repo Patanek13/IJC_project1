@@ -29,24 +29,24 @@ struct ppm *ppm_read(const char *filename) {
     unsigned ColorVal;
 
     if ((fscanf(ppm_file, "%2s", buffer) != 1) || (strcmp(buffer, MagicNumber) != 0)) {
-        warning("ppm_read: Chybný formát souboru %s\n", filename);
+        warning("ppm_read: Chybný formát souboru (MagicNumber) %s\n", filename);
         fclose(ppm_file);
         return NULL;
     };
 
-    if (fscanf(ppm_file,"%u %u", xsize, ysize) != TwoSizes || xsize < 1 || ysize < 1) {
+    if (fscanf(ppm_file,"%u %u", &xsize, &ysize) != TwoSizes || xsize < 1 || ysize < 1) {
         warning("ppm_read: Nesprávné rozměry obrázku %s\n", filename);
         fclose(ppm_file);
         return NULL;
     }
 
-    if (fscanf(ppm_file, "%u", &ColorVal) != 1 || ColorVal == MaxColorValue) {
-        warning("ppm_read: Chybný formát souboru %s\n", filename);
+    if (fscanf(ppm_file, "%u", &ColorVal) != 1 || ColorVal != MaxColorValue) {
+        warning("ppm_read: Chybný formát souboru (ColorValue) %s\n", filename);
         fclose(ppm_file);
         return NULL;
     }
 
-    char c = fgetc(ppm_file);
+   char c = fgetc(ppm_file);
     if (c == EOF || !isspace(c)) {
         warning("ppm_read: Chybný formát souboru %s\n", filename);
         fclose(ppm_file);
@@ -64,8 +64,8 @@ struct ppm *ppm_read(const char *filename) {
     ppm->xsize = xsize;
     ppm->ysize = ysize;
 
-    if (fread(ppm->data, RGB, xsize * ysize, ppm_file) != xsize * ysize) {
-        warning("ppm_read: Chybný formát dat %s\n");
+    if (fread(ppm->data, 1, RGB * xsize * ysize, ppm_file) != RGB * xsize * ysize) {
+        warning("ppm_read: Chybný formát dat (BitData) %s\n", filename);
         free(ppm);
         fclose(ppm_file);
         return NULL;
