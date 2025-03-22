@@ -7,7 +7,7 @@ CC = gcc
 # Flags/parametres for compiler
 CFLAGS = -std=c11 -pedantic -Wall -Wextra -O2
 # Library flags
-LDFLAGS = -lm 
+LDFLAGS = -lm
 # Debugger flags
 DBFLAGS = -g
 # Source code files
@@ -15,7 +15,8 @@ SRC = primes.c eratosthenes.c error.c
 HEADERS = bitset.h eratosthenes.h
 OBJECTS = $(SRC:.c=.o)
 
-CFLAGS += -fsanitize=address
+# Add sanitizer flags to the CFLAGS
+#CFLAGS += -fsanitize=address
 
 .PHONY: all run clean zip
 
@@ -30,7 +31,7 @@ run: all
 zip:
 	zip xlostap00.zip *.c *.h Makefile
 
-# Linikng
+# Linking
 primes: $(OBJECTS)
 	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS) 
 
@@ -61,7 +62,3 @@ ppm.o: ppm.c ppm.h error.h
 
 utf8_check.o: utf8_check.c
 	$(CC) $(CFLAGS) $(DBFLAGS) -c -o $@ utf8_check.c
-
-
-
-
