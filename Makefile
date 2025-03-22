@@ -24,7 +24,7 @@ all: primes primes-i steg-decode
 clean:
 	rm -f *.o *.elf primes primes-i steg-decode xlostap00.zip
 
-run: primes primes-i 
+run: all
 	ulimit -v unlimited && ./primes && ./primes-i
 
 zip:
