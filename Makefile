@@ -26,14 +26,14 @@ clean:
 	rm -f *.o *.elf primes primes-i steg-decode xlostap00.zip
 
 run: all
-	ulimit -v unlimited && ./primes && ./primes-i
+	ulimit -s unlimited && ./primes && ./primes-i
 
 zip:
 	zip xlostap00.zip *.c *.h Makefile
 
 # Linking
 primes: $(OBJECTS)
-	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS) 
+	$(CC) $(CFLAGS) $(DBFLAGS) -o $@ $^ $(LDFLAGS)
 
 primes-i: primes-i.o eratosthenes.o error.o
 	$(CC) $(CFLAGS) $(DBFLAGS) -DUSE_INLINE -o $@ $^ $(LDFLAGS)
