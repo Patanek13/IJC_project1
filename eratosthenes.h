@@ -7,7 +7,7 @@
 #define ERATOSTHENES
 
 #include "bitset.h"
-
+// Eratosthenes algorithm for finding prime numbers
 void Eratosthenes(bitset_t array);
 
 #endif // ERATOSTHENES

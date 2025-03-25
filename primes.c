@@ -11,7 +11,7 @@
 
 #define MAX 333000000
 #define PRINT 10
-
+// Print last 10 primes from bitset array to stdout separated by newline in ascending order
 void print_primes(bitset_t array) {
     unsigned long count = 0;
     unsigned long primes[PRINT];
@@ -31,10 +31,11 @@ void print_primes(bitset_t array) {
 }
 
 int main() {
+    // Create bitset array on stack, find primes and print them
     clock_t start = clock();
-    bitset_alloc(array, MAX);
+    bitset_create(array, MAX);
     Eratosthenes(array);
     print_primes(array);
-    bitset_free(array);
+    // Print time of execution
     fprintf(stderr, "Time=%.3g\n", (double)(clock()-start)/CLOCKS_PER_SEC);
 }

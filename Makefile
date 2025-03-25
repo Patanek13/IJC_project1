@@ -1,5 +1,5 @@
 # Makefile
-# Řešení IJC-DU1, příklad a) b), 25.3.2025
+# Řešení IJC-DU1, příklad a), b), 25.3.2025
 # Autor: Patrik Lošťák, FIT
 
 # Compiler
@@ -19,15 +19,15 @@ OBJECTS = $(SRC:.c=.o)
 #CFLAGS += -fsanitize=address
 
 .PHONY: all run clean zip
-
+# All executables
 all: primes primes-i steg-decode
-
+# Clean all object files and executables
 clean:
 	rm -f *.o *.elf primes primes-i steg-decode xlostap00.zip
-
+# Run primes and primes-i and set stack size to unlimited for primes and primes-i, makes also steg-decode
 run: all
 	ulimit -s unlimited && ./primes && ./primes-i
-
+# Create zip archive
 zip:
 	zip xlostap00.zip *.c *.h Makefile
 

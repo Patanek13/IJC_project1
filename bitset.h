@@ -17,15 +17,15 @@ typedef unsigned long *bitset_t;
 // Typ indexu bitového pole.
 typedef unsigned long bitset_index_t;
 
-// Num of ULs to store all bits
+// Num of ULs to store all bits and one element for bitset_size
 #define arr_size(size) ((size + (sizeof(bitset_index_t) * CHAR_BIT - 1)) / (sizeof(bitset_index_t) * CHAR_BIT) + 1)
 
-//num of ULs to store all bits and one element for bitset_size
+// Create static array on stack
 #define bitset_create(arr_name, size) \
     static_assert(size > 0 && size < ULONG_MAX, "bitset_create: Spatna velikost pole!\n"); \
     bitset_index_t arr_name[arr_size(size)] = {0}; \
     arr_name[0] = size; 
-
+// Create dynamic array on heap
 #define bitset_alloc(arr_name, size) \
     assert(size > 0 && size < ULONG_MAX); \
     bitset_t arr_name = calloc(arr_size(size), sizeof(bitset_index_t)); \
@@ -34,13 +34,13 @@ typedef unsigned long bitset_index_t;
     } \
     arr_name[0] = size; 
 
-
+// Define not inline functions
 #ifndef USE_INLINE
-
+// Frees dynamic allocated array
 #define bitset_free(arr_name) free(arr_name)
-
+// Size of bitset in bits
 #define bitset_size(arr_name) arr_name[0]
-
+// Fill bitset with 0 or 1
 #define bitset_fill(arr_name, bool_expr) \
     for (bitset_index_t index = 1; index < arr_size(arr_name[0]); index++) { \
         if (bool_expr) { \
@@ -49,7 +49,7 @@ typedef unsigned long bitset_index_t;
             arr_name[index] = 0UL; \
         } \
     }
-
+// Set bit at index to 0 or 1
 #define bitset_setbit(arr_name, index, bool_expr) \
     do { \
         bitset_index_t bit_arr_idx = index / (sizeof(bitset_index_t) * CHAR_BIT) + 1; \
@@ -65,7 +65,7 @@ typedef unsigned long bitset_index_t;
             } \
         } \
     } while (0)
-
+// Get bit at index
 #define bitset_getbit(arr_name, index) \
     ( \
         (index >= arr_name[0]) ? \
@@ -74,7 +74,7 @@ typedef unsigned long bitset_index_t;
     )
 
 #else
-
+// Define inline functions
 static inline void bitset_free(bitset_t arr_name) {
     free(arr_name);
 }

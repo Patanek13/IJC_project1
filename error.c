@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-
+// Print warning message to stderr
 void warning (const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -15,7 +15,7 @@ void warning (const char *fmt, ...) {
     fprintf(stderr, "\n");
     va_end(args);
 }
-
+// Print error message to stderr and exit program
 void error_exit (const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
